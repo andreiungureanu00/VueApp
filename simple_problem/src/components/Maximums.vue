@@ -5,7 +5,7 @@
         Introduceți un șir de numere cuprinse între 100 și 999 separate prin
         virgulă
       </p>
-      <input id="num_input" />
+      <input v-model="num_input" @input="resetMatrix" />
       <button class="calc" @click="findMaximums()">Calculează</button>
       <div class="results">
         Maximele din clase: <b>{{ result.length > 0 ? result : "" }}</b>
@@ -16,7 +16,7 @@
         <ul class="layout">
           <li v-for="elem in elements" :key="elem">
             <div class="matrixCell">
-              <div class="cellValue" @click="setValue">?</div>
+              <div class="cellValue" @click="setValue">{{ elem }}</div>
             </div>
           </li>
         </ul>
@@ -32,23 +32,44 @@ export default {
   name: "Maximums",
   data() {
     return {
+      num_input: "",
       lista: [
-        { class: 100, numbers: [], max: 0 },
-        { class: 200, numbers: [], max: 0 },
-        { class: 300, numbers: [], max: 0 },
-        { class: 400, numbers: [], max: 0 },
-        { class: 500, numbers: [], max: 0 },
-        { class: 600, numbers: [], max: 0 },
-        { class: 700, numbers: [], max: 0 },
-        { class: 800, numbers: [], max: 0 },
-        { class: 900, numbers: [], max: 0 },
+        { class: 100, max: 0 },
+        { class: 200, max: 0 },
+        { class: 300, max: 0 },
+        { class: 400, max: 0 },
+        { class: 500, max: 0 },
+        { class: 600, max: 0 },
+        { class: 700, max: 0 },
+        { class: 800, max: 0 },
+        { class: 900, max: 0 },
       ],
-      elements: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+      elements: [
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?",
+      ],
       result: [],
       ciphers: [],
     };
   },
   methods: {
+    resetMatrix() {
+      this.ciphers = [];
+    },
     setValue: function (event) {
       if (event.target.innerText != "?") alert(event.target.innerText);
 
@@ -62,35 +83,41 @@ export default {
       this.ciphers.splice(position, 1);
     },
     findMaximums() {
-      let arr = [];
-      arr = document.getElementById("num_input").value;
-      arr = arr.split(" ").join("");
+      let arr = "";
+      arr = this.num_input.split(" ").join("");
       arr = arr.split(",");
 
       if (arr.length > 0 && arr[0] !== "") {
         for (let x of arr) {
           for (let i = 0; i < 9; i++) {
             if (x.toString().startsWith((i + 1).toString())) {
-              this.lista[i].numbers.push(x);
-              this.lista[i].max = Math.max(...this.lista[i].numbers);
+              this.lista[i].max = Math.max(this.lista[i].max, x);
             }
           }
         }
 
+        this.ciphers = [];
+
         this.result = this.lista
           .filter((e) => e.max != 0)
           .map((elem) => {
+            this.ciphers.push(
+              String.fromCharCode(parseInt(parseInt(elem.max) % 26) + 65)
+            );
             return elem.max;
           });
 
-        this.ciphers = this.result.map((elem) =>
-          String.fromCharCode(parseInt(parseInt(elem) % 26) + 65)
-        );
-
-        this.lista.map((item) => {
-          item.max = 0;
-          item.numbers = [];
-        });
+        this.lista = [
+          { class: 100, numbers: [], max: 0 },
+          { class: 200, numbers: [], max: 0 },
+          { class: 300, numbers: [], max: 0 },
+          { class: 400, numbers: [], max: 0 },
+          { class: 500, numbers: [], max: 0 },
+          { class: 600, numbers: [], max: 0 },
+          { class: 700, numbers: [], max: 0 },
+          { class: 800, numbers: [], max: 0 },
+          { class: 900, numbers: [], max: 0 },
+        ];
       } else {
         alert("Introduceți numere în casetă");
       }
@@ -104,7 +131,8 @@ export default {
 .centered_div {
   height: fit-content;
   width: 40vw;
-  padding-left: 5px;
+  padding-left: 1vw;
+  padding-right: 3vw;
   text-align: left;
   display: block !important;
   border: 3px solid #42b983;
