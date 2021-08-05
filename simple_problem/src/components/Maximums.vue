@@ -16,7 +16,7 @@
         <ul class="layout">
           <li v-for="elem in elements" :key="elem">
             <div class="matrixCell">
-              <div class="cellValue" @click="setValue">{{elem}}</div>
+              <div class="cellValue" @click="setValue">{{ elem }}</div>
             </div>
           </li>
         </ul>
@@ -100,6 +100,8 @@ export default {
             }
           }
         }
+
+        this.ciphers = [];
 
         this.result = this.lista
           .filter((e) => e.max != 0)
