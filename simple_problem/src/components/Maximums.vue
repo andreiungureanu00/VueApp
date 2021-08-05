@@ -5,7 +5,7 @@
         Introduceți un șir de numere cuprinse între 100 și 999 separate prin
         virgulă
       </p>
-      <input v-model="num_input" @input="resetMatrix" />
+      <input v-model="num_input" />
       <button class="calc" @click="findMaximums()">Calculează</button>
       <div class="results">
         Maximele din clase: <b>{{ result.length > 0 ? result : "" }}</b>
@@ -16,7 +16,7 @@
         <ul class="layout">
           <li v-for="elem in elements" :key="elem">
             <div class="matrixCell">
-              <div class="cellValue" @click="setValue">{{ elem }}</div>
+              <div class="cellValue" @click="setValue">{{elem}}</div>
             </div>
           </li>
         </ul>
@@ -68,7 +68,11 @@ export default {
   },
   methods: {
     resetMatrix() {
-      this.ciphers = [];
+      let cells = document.getElementsByClassName("cellValue");
+      console.log(cells);
+      for (let x of cells) {
+        x.innerText = "?";
+      }
     },
     setValue: function (event) {
       if (event.target.innerText != "?") alert(event.target.innerText);
@@ -83,6 +87,7 @@ export default {
       this.ciphers.splice(position, 1);
     },
     findMaximums() {
+      this.resetMatrix();
       let arr = "";
       arr = this.num_input.split(" ").join("");
       arr = arr.split(",");
@@ -95,8 +100,6 @@ export default {
             }
           }
         }
-
-        this.ciphers = [];
 
         this.result = this.lista
           .filter((e) => e.max != 0)
